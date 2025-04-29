@@ -1,18 +1,102 @@
-<div class="">
-  <div class="">
-    <div class="">
-      <h2 class="">Hello Boss</h2>
-    </div>
+<div class="video-section">
+  <div class="video-container">
+    <video
+      class="video-element"
+      {% if section.settings.autoplay %}autoplay{% endif %}
+      {% if section.settings.loop %}loop{% endif %}
+      {% if section.settings.muted %}muted{% endif %}
+      {% if section.settings.controls %}controls{% endif %}
+      {% if section.settings.poster != blank %}poster="{{ section.settings.poster | img_url: 'master' }}"{% endif %}
+      style="width: {{ section.settings.width }}%; max-width: 100%;"
+    >
+      <source src="{{ section.settings.video_url }}" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
   </div>
-</div>  
+</div>
+
 {% schema %}
 {
-  "name": "New Section v2",
-  "settings": [],
+  "name": "Video Section",
+  "settings": [
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Video URL",
+      "info": "Enter the URL of your video file"
+    },
+    {
+      "type": "image_picker",
+      "id": "poster",
+      "label": "Video Poster",
+      "info": "Select a thumbnail image for the video"
+    },
+    {
+      "type": "range",
+      "id": "width",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Video Width",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "loop",
+      "label": "Loop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "muted",
+      "label": "Muted",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "controls",
+      "label": "Show Controls",
+      "default": true
+    }
+  ],
   "presets": [
     {
-      "name": "New Section v2"  
+      "name": "Video Section",
+      "settings": {
+        "video_url": "",
+        "width": 100,
+        "autoplay": false,
+        "loop": false,
+        "muted": true,
+        "controls": true
+      }
     }
   ]
 }
 {% endschema %}
+
+<style>
+  .video-section {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .video-container {
+    margin: 0 auto;
+    max-width: 100%;
+  }
+  
+  .video-element {
+    display: block;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+</style>

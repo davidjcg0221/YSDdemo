@@ -1,0 +1,184 @@
+{% assign active_store = section.settings.default_store %}
+
+<div class="store-locator" data-section-id="{{ section.id }}" data-section-type="store-locator">
+  <div class="page-width">
+    <div class="section-header text-center">
+      <h2>{{ section.settings.title | escape }}</h2>
+      {% if section.settings.description != blank %}
+        <div class="rte">{{ section.settings.description }}</div>
+      {% endif %}
+    </div>
+
+    <div class="store-locator__container">
+      <div class="store-locator__list">
+        {% for block in section.blocks %}
+          {% if block.type == 'store' %}
+            <div class="store-card" {{ block.shopify_attributes }}>
+              <h3>{{ block.settings.store_name }}</h3>
+              <div class="store-details">
+                <p>{{ block.settings.address }}</p>
+                {% if block.settings.phone != blank %}
+                  <p>Tel: <a href="tel:{{ block.settings.phone }}">{{ block.settings.phone }}</a></p>
+                {% endif %}
+                {% if block.settings.hours != blank %}
+                  <p class="store-hours">{{ block.settings.hours }}</p>
+                {% endif %}
+                {% if block.settings.directions_url != blank %}
+                  <a href="{{ block.settings.directions_url }}" class="btn" target="_blank">Get Directions</a>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      
+      {% if section.settings.show_map %}
+        <div class="store-locator__map" id="map-{{ section.id }}">
+          <!-- Map will be initialized here -->
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+.store-locator {
+  padding: 40px 0;
+}
+
+.store-locator__container {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: 1fr;
+}
+
+@media screen and (min-width: 750px) {
+  .store-locator__container {
+    grid-template-columns: 300px 1fr;
+  }
+}
+
+.store-locator__list {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.store-card {
+  padding: 20px;
+  margin-bottom: 15px;
+  background: #f8f8f8;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.store-card:hover {
+  background: #f0f0f0;
+}
+
+.store-locator__map {
+  height: 600px;
+  background: #e5e5e5;
+  border-radius: 8px;
+}
+
+.store-details {
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+.store-hours {
+  margin: 10px 0;
+  white-space: pre-line;
+}
+
+.btn {
+  display: inline-block;
+  padding: 8px 16px;
+  background: {{ section.settings.button_color }};
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+</style>
+
+{% schema %}
+{
+  "name": "Store Locator",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Find Your Store"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_map",
+      "label": "Show Map",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button Color",
+      "default": "#000000"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "store",
+      "name": "Store",
+      "settings": [
+        {
+          "type": "text",
+          "id": "store_name",
+          "label": "Store Name",
+          "default": "Store Location"
+        },
+        {
+          "type": "textarea",
+          "id": "address",
+          "label": "Address"
+        },
+        {
+          "type": "text",
+          "id": "phone",
+          "label": "Phone Number"
+        },
+        {
+          "type": "textarea",
+          "id": "hours",
+          "label": "Store Hours"
+        },
+        {
+          "type": "url",
+          "id": "directions_url",
+          "label": "Directions URL"
+        },
+        {
+          "type": "text",
+          "id": "latitude",
+          "label": "Latitude"
+        },
+        {
+          "type": "text",
+          "id": "longitude",
+          "label": "Longitude"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Store Locator",
+      "category": "Store information"
+    }
+  ]
+}
+{% endschema %} 
